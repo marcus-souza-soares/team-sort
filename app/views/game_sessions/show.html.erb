@@ -1,0 +1,121 @@
+<% content_for :title, "Sessão de Jogo" %>
+
+<div class="max-w-4xl mx-auto">
+  <% if notice.present? %>
+    <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-md inline-block" id="notice"><%= notice %></p>
+  <% end %>
+
+  <% if alert.present? %>
+    <p class="py-2 px-3 bg-red-50 mb-5 text-red-500 font-medium rounded-md inline-block" id="alert"><%= alert %></p>
+  <% end %>
+
+  <div class="bg-white shadow rounded-lg p-6 mb-6">
+    <h1 class="font-bold text-3xl mb-4">Sessão de Jogo</h1>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <div class="bg-blue-50 p-4 rounded-lg">
+        <h3 class="font-semibold text-blue-800">Data</h3>
+        <p class="text-blue-600"><%= @game_session.date.strftime("%d/%m/%Y %H:%M") %></p>
+      </div>
+      
+      <div class="bg-green-50 p-4 rounded-lg">
+        <h3 class="font-semibold text-green-800">Jogadores Participantes</h3>
+        <p class="text-green-600"><%= @total_players %></p>
+      </div>
+      
+      <div class="bg-purple-50 p-4 rounded-lg">
+        <h3 class="font-semibold text-purple-800">Status</h3>
+        <p class="text-purple-600"><%= @game_session.status_text %></p>
+      </div>
+    </div>
+
+    <div class="flex flex-wrap gap-2 mb-6">
+      <%= link_to "Gerenciar Jogadores", manage_players_game_session_path(@game_session), class: "px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 font-medium" %>
+      <%= link_to "Editar Sessão", edit_game_session_path(@game_session), class: "px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-medium" %>
+      <%= link_to "Voltar para Sessões", game_sessions_path, class: "px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 font-medium" %>
+      
+      <% if @total_players >= 2 %>
+        <%= link_to "Sortear Times", sort_teams_form_game_session_path(@game_session), class: "px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 font-medium" %>
+      <% end %>
+      
+      <%= button_to "Excluir Sessão", @game_session, method: :delete, class: "px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 font-medium", data: { turbo_confirm: "Tem certeza que deseja excluir esta sessão?" } %>
+    </div>
+  </div>
+
+  <!-- Seção de Jogadores Participantes -->
+  <div class="bg-white shadow rounded-lg p-6 mb-6">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="font-bold text-2xl">Jogadores Participantes</h2>
+      <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
+        <%= @session_participants.count %> jogadores
+      </span>
+    </div>
+    
+    <% if @session_participants.any? %>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <% @session_participants.each do |player| %>
+          <div class="border rounded-lg p-3 bg-gray-50">
+            <h3 class="font-medium text-gray-900"><%= player.full_name %></h3>
+            <% if player.position.present? %>
+              <p class="text-sm text-gray-600"><%= player.position %></p>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="text-center py-8">
+        <p class="text-gray-500 mb-4">Nenhum jogador adicionado à sessão</p>
+        <%= link_to "Adicionar Jogadores", manage_players_game_session_path(@game_session), class: "px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 font-medium" %>
+      </div>
+    <% end %>
+  </div>
+
+  <% if @teams.any? %>
+    <div class="bg-white shadow rounded-lg p-6">
+      <h2 class="font-bold text-2xl mb-4">Times Sorteados</h2>
+      <p class="text-gray-600 mb-4">Total: <%= @total_players %> jogadores em <%= @total_teams %> times</p>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <% @teams.each_with_index do |team, index| %>
+          <div class="border rounded-lg p-4 <%= index == @teams.count - 1 && team.players.count < @teams.first.players.count ? 'bg-yellow-50 border-yellow-200' : 'bg-gray-50' %>">
+            <div class="flex justify-between items-start mb-3">
+              <h3 class="font-bold text-lg text-blue-800"><%= team.name %></h3>
+              <% if index == @teams.count - 1 && team.players.count < @teams.first.players.count %>
+                <span class="px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800">
+                  Time Adicional
+                </span>
+              <% end %>
+            </div>
+            <p class="text-sm text-gray-600 mb-3"><%= team.players.count %> jogadores</p>
+            
+            <% if team.players.any? %>
+              <ul class="space-y-1">
+                <% team.players.each do |player| %>
+                  <li class="text-sm bg-white px-2 py-1 rounded border">
+                    <%= player.full_name %>
+                    <% if player.position.present? %>
+                      <span class="text-xs text-gray-500">(<%= player.position %>)</span>
+                    <% end %>
+                  </li>
+                <% end %>
+              </ul>
+            <% else %>
+              <p class="text-gray-500 text-sm">Nenhum jogador atribuído</p>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% else %>
+    <div class="bg-white shadow rounded-lg p-6 text-center">
+      <h2 class="font-bold text-xl mb-2">Nenhum Time Sorteado</h2>
+      <p class="text-gray-600 mb-4">Adicione jogadores e clique em "Sortear Times" para começar o sorteio</p>
+      
+      <% if @total_players >= 2 %>
+        <%= link_to "Sortear Times", sort_teams_form_game_session_path(@game_session), class: "px-6 py-3 bg-orange-600 text-white rounded-md hover:bg-orange-700 font-medium text-lg" %>
+      <% else %>
+        <p class="text-orange-600">Adicione pelo menos 2 jogadores à sessão para poder fazer o sorteio</p>
+      <% end %>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,115 @@
+<% content_for :title, "Sortear Times - #{@game_session.date.strftime('%d/%m/%Y')}" %>
+
+<div class="max-w-2xl mx-auto">
+  <% if alert.present? %>
+    <p class="py-2 px-3 bg-red-50 mb-5 text-red-500 font-medium rounded-md inline-block" id="alert"><%= alert %></p>
+  <% end %>
+
+  <div class="mb-8">
+    <div class="flex justify-between items-center">
+      <div>
+        <h1 class="font-bold text-3xl text-gray-900">Sortear Times</h1>
+        <p class="text-gray-600 mt-2">Sessão de <%= @game_session.date.strftime("%d/%m/%Y") %> às <%= @game_session.date.strftime("%H:%M") %></p>
+      </div>
+      <div class="flex gap-2">
+        <%= link_to "Voltar à Sessão", @game_session, class: "px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md font-medium" %>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-white shadow rounded-lg p-6">
+    <div class="mb-6">
+      <h2 class="font-bold text-xl mb-4 text-gray-900">Configurações do Sorteio</h2>
+      
+      <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+          <div>
+            <span class="font-medium text-blue-800">Total de Jogadores:</span>
+            <span class="text-blue-600 font-bold"><%= @total_players %></span>
+          </div>
+          <div>
+            <span class="font-medium text-blue-800">Status da Sessão:</span>
+            <span class="text-blue-600 font-bold"><%= @game_session.status_text %></span>
+          </div>
+        </div>
+      </div>
+
+      <% if @total_players < 2 %>
+        <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+          <p class="text-red-800 font-medium">❌ Jogadores insuficientes</p>
+          <p class="text-red-600 text-sm">São necessários pelo menos 2 jogadores para fazer o sorteio.</p>
+        </div>
+      <% else %>
+        <%= form_with url: sort_teams_game_session_path(@game_session), method: :post, class: "space-y-6" do |form| %>
+          <div>
+            <label for="players_per_team" class="block text-sm font-medium text-gray-700 mb-2">
+              Quantos jogadores por time?
+            </label>
+            <select name="players_per_team" id="players_per_team" 
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    onchange="updateTeamsInfo()">
+              <% (@min_players_per_team..@max_players_per_team).each do |num| %>
+                <option value="<%= num %>" <%= 'selected' if num == 5 %>><%= num %> jogadores</option>
+              <% end %>
+            </select>
+          </div>
+
+          <div id="teams-info" class="bg-green-50 border border-green-200 rounded-lg p-4">
+            <h3 class="font-medium text-green-800 mb-2">Informações do Sorteio</h3>
+            <div class="space-y-2 text-sm">
+              <div class="flex justify-between">
+                <span class="font-medium text-green-800">Times completos:</span>
+                <span class="text-green-600 font-bold" id="complete-teams">
+                  <%= @game_session.possible_teams(5) %>
+                </span>
+              </div>
+              <div class="flex justify-between">
+                <span class="font-medium text-green-800">Jogadores restantes:</span>
+                <span class="text-green-600 font-bold" id="remaining-players">
+                  <%= @total_players % 5 %>
+                </span>
+              </div>
+              <div class="flex justify-between">
+                <span class="font-medium text-green-800">Time adicional:</span>
+                <span class="text-green-600 font-bold" id="additional-team">
+                  <%= (@total_players % 5) > 0 ? "Sim" : "Não" %>
+                </span>
+              </div>
+              <div class="flex justify-between border-t pt-2">
+                <span class="font-medium text-green-800">Total de times:</span>
+                <span class="text-green-600 font-bold" id="total-teams">
+                  <%= @game_session.possible_teams(5) + ((@total_players % 5) > 0 ? 1 : 0) %>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex gap-3">
+            <%= form.submit "Fazer Sorteio", 
+                class: "flex-1 px-4 py-3 bg-green-600 hover:bg-green-700 text-white rounded-md font-medium text-center",
+                data: { turbo_confirm: "Tem certeza que deseja sortear os times?" } %>
+            <%= link_to "Cancelar", @game_session, 
+                class: "px-4 py-3 bg-gray-600 hover:bg-gray-700 text-white rounded-md font-medium text-center" %>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<script>
+function updateTeamsInfo() {
+  const playersPerTeam = parseInt(document.getElementById('players_per_team').value);
+  const totalPlayers = <%= @total_players %>;
+  
+  const completeTeams = Math.floor(totalPlayers / playersPerTeam);
+  const remainingPlayers = totalPlayers % playersPerTeam;
+  const additionalTeam = remainingPlayers > 0 ? "Sim" : "Não";
+  const totalTeams = completeTeams + (remainingPlayers > 0 ? 1 : 0);
+  
+  document.getElementById('complete-teams').textContent = completeTeams;
+  document.getElementById('remaining-players').textContent = remainingPlayers;
+  document.getElementById('additional-team').textContent = additionalTeam;
+  document.getElementById('total-teams').textContent = totalTeams;
+}
+</script> 

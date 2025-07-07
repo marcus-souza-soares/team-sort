@@ -1,0 +1,12 @@
+<% content_for :title, "Novo Jogador" %>
+
+<div class="max-w-2xl mx-auto">
+  <div class="mb-8">
+    <h1 class="font-bold text-3xl text-gray-900">Novo Jogador</h1>
+    <p class="text-gray-600 mt-2">Adicione um novo jogador ao sistema</p>
+  </div>
+
+  <div class="bg-white shadow rounded-lg p-6">
+    <%= render "form", player: @player %>
+  </div>
+</div> 

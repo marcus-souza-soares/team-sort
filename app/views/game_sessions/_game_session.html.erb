@@ -1,0 +1,11 @@
+<div id="<%= dom_id game_session %>" class="w-full sm:w-auto my-5 space-y-5">
+  <div>
+    <strong class="block font-medium mb-1">Data:</strong>
+    <%= game_session.date.strftime("%d/%m/%Y %H:%M") %>
+  </div>
+
+  <div>
+    <strong class="block font-medium mb-1">Status:</strong>
+    <%= game_session.status_text %>
+  </div>
+</div>
