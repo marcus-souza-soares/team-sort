@@ -65,6 +65,14 @@ rails s
 
 Abra seu navegador e acesse: **http://localhost:3000**
 
+### 6. 🚀 Como rodar o projeto localmente via devContainer
+
+```bash
+# abra o VSCode
+# Inicie o projeto dentro do dev container
+bundle && bin/setup
+```
+
 ## 📊 Dados Iniciais (Seed)
 
 O seed cria automaticamente:
@@ -182,3 +190,13 @@ rails server -p 3001
 ---
 
 **Desenvolvido com ❤️ para organizar peladas com os amigos!** ⚽
+
+___
+
+## Avaliação da disciplina: Arquitetura de Aplicações Web com RoR (Jackson P)
+
+### 🧠 Conceitos aplicados
+
+1. Observers
+- Foi implementado observers no modelo de TeamAssignment
+

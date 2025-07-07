@@ -8,6 +8,8 @@
 - **Interface moderna**: Views responsivas com Tailwind CSS
 - **Funcionalidades core**: CRUD completo para todos os recursos
 - **Sistema de sorteio**: Funcional e integrado ao controller
+- **DevContainer**: Ambiente de desenvolvimento containerizado completo
+- **Observer Pattern**: TeamAssignmentObserver com callbacks automáticos
 
 ### 🔄 O que precisa ser testado
 1. **Fluxo básico**: Criar jogadores → Criar sessão → Fazer sorteio
@@ -30,6 +32,8 @@ Testar o sistema completo e identificar possíveis melhorias ou bugs.
 - **Algoritmo**: Sorteio aleatório com distribuição equilibrada
 - **Validações**: Regras de negócio nos modelos
 - **Navegação**: Interface intuitiva com breadcrumbs visuais
+- **Desenvolvimento**: DevContainer para ambiente isolado e reproduzível
+- **Observer Pattern**: Callbacks automáticos para logging e notificações
 
 ## Considerações Atuais
 - Sistema está funcionalmente completo para uso básico

@@ -11,7 +11,7 @@ class GameSessionsController < ApplicationController
     @teams = @game_session.teams.includes(:players).distinct
     @total_players = @game_session.total_players
     @total_teams = @game_session.total_teams
-    @session_participants = @game_session.session_participants
+    @session_participants = @game_session.session_participants.distinct
   end
 
   # GET /game_sessions/new

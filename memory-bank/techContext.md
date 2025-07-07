@@ -76,4 +76,43 @@
 - Rails 8.0
 - Tailwind CSS
 - Stimulus
-- Importmaps 
+- Importmaps
+
+## DevContainer
+
+### Configuração
+- **Ruby 3.4.4** via rbenv
+- **Node.js 20** para assets
+- **Redis 7** para cache e sessões
+- **SQLite3** para banco de dados
+- **Extensões VS Code** otimizadas para Rails
+
+### Arquivos
+- `.devcontainer/devcontainer.json` - Configuração principal
+- `.devcontainer/docker-compose.yml` - Serviços Docker
+- `.devcontainer/Dockerfile` - Imagem base
+- `.devcontainer/README.md` - Documentação
+
+### Comandos Automáticos
+- `bundle install` - Instalação de gems
+- `rails db:create db:migrate db:seed` - Setup do banco
+- `rails tailwindcss:build` - Compilação de assets
+
+## Observer Pattern
+
+### Implementação
+- **Concern**: `TeamAssignmentObserver` em `app/models/concerns/`
+- **Modelo**: `TeamAssignment` inclui o observer via `include TeamAssignmentObserver`
+- **Callbacks**: `after_create`, `after_update`, `after_destroy`, `after_commit`
+
+### Funcionalidades
+- **Logging Automático**: Logs de atribuição, transferência e remoção
+- **Estatísticas**: Atualização automática de estatísticas da sessão
+- **Notificações**: Simulação de notificações para mudanças importantes
+- **Validações**: Prevenção de atribuições duplicadas
+
+### Arquivos
+- `app/models/concerns/team_assignment_observer.rb` - Concern do observer
+- `app/models/team_assignment.rb` - Modelo com observer incluído
+- `test/models/team_assignment_test.rb` - Testes do observer
+- `docs/observer_example.md` - Documentação e exemplos 

@@ -1,4 +1,6 @@
 class TeamAssignment < ApplicationRecord
+  include TeamAssignmentObserver
+
   belongs_to :player
   belongs_to :team
   belongs_to :game_session
