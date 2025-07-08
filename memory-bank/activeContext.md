@@ -10,6 +10,7 @@
 - **Sistema de sorteio**: Funcional e integrado ao controller
 - **DevContainer**: Ambiente de desenvolvimento containerizado completo
 - **Observer Pattern**: TeamAssignmentObserver com callbacks automáticos
+- **Sidekiq Jobs**: Sistema de jobs em background para operações pesadas
 
 ### 🔄 O que precisa ser testado
 1. **Fluxo básico**: Criar jogadores → Criar sessão → Fazer sorteio
@@ -34,12 +35,15 @@ Testar o sistema completo e identificar possíveis melhorias ou bugs.
 - **Navegação**: Interface intuitiva com breadcrumbs visuais
 - **Desenvolvimento**: DevContainer para ambiente isolado e reproduzível
 - **Observer Pattern**: Callbacks automáticos para logging e notificações
+- **Background Jobs**: Sidekiq para processamento assíncrono de operações pesadas
 
 ## Considerações Atuais
 - Sistema está funcionalmente completo para uso básico
 - Interface é responsiva e moderna
 - Algoritmo de sorteio é equilibrado
 - Código está bem estruturado e documentado
+- Observer Pattern corrigido e funcionando
+- Sidekiq configurado com tratamento de erros
 - Pronto para testes e uso real
 
 ## Próxima Sessão

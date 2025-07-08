@@ -198,5 +198,10 @@ ___
 ### 🧠 Conceitos aplicados
 
 1. Observers
-- Foi implementado observers no modelo de TeamAssignment
+Foi implementado observers no modelo de TeamAssignment
 
+2. Service object
+Foi implementado um service object para sortear os times 🎲
+@app/services/team_sorter_service.rb
+
+3. 

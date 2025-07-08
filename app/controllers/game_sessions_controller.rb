@@ -72,7 +72,6 @@ class GameSessionsController < ApplicationController
 
   # POST /game_sessions/1/sort_teams
   def sort_teams
-    binding.irb
     players_per_team = params[:players_per_team].to_i
 
     if players_per_team < 2

@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  require "sidekiq/web" 
+  mount Sidekiq::Web => "/sidekiq"
+
   resources :team_assignments
   resources :game_sessions do
     member do
@@ -7,10 +10,22 @@ Rails.application.routes.draw do
       get :manage_players
       post :add_player
       delete :remove_player
+      post :sort_teams_job
+      post :send_notifications
+      post :cleanup_session
     end
   end
   resources :teams
   resources :players
+
+  # Jobs management
+  resources :jobs, only: [:index] do
+    collection do
+      get :status
+      post :cleanup_all
+    end
+  end
+
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

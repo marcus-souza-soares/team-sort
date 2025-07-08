@@ -18,6 +18,7 @@
 - **Linter**: RuboCop
 - **Deploy**: Kamal
 - **Containerização**: Docker
+- **Background Jobs**: Sidekiq para processamento assíncrono
 
 ## Estrutura Atual
 
@@ -77,6 +78,7 @@
 - Tailwind CSS
 - Stimulus
 - Importmaps
+- Sidekiq 7.0
 
 ## DevContainer
 
@@ -115,4 +117,28 @@
 - `app/models/concerns/team_assignment_observer.rb` - Concern do observer
 - `app/models/team_assignment.rb` - Modelo com observer incluído
 - `test/models/team_assignment_test.rb` - Testes do observer
-- `docs/observer_example.md` - Documentação e exemplos 
+- `docs/observer_example.md` - Documentação e exemplos
+
+## Sidekiq Jobs
+
+### Implementação
+- **TeamSortingJob**: Sorteio automático de times em background
+- **TeamNotificationJob**: Envio de notificações sobre times
+- **TeamCleanupJob**: Limpeza e manutenção de dados
+- **JobsController**: Interface para gerenciar jobs
+
+### Funcionalidades
+- **Processamento Assíncrono**: Operações pesadas não bloqueiam interface
+- **Filas Prioritárias**: default, notifications, maintenance
+- **Retry Automático**: Máximo 3 tentativas com intervalo de 60s
+- **Monitoramento**: Interface web em `/jobs` com status em tempo real
+
+### Arquivos
+- `app/jobs/team_sorting_job.rb` - Job de sorteio de times
+- `app/jobs/team_notification_job.rb` - Job de notificações
+- `app/jobs/team_cleanup_job.rb` - Job de limpeza
+- `app/controllers/jobs_controller.rb` - Controller para gerenciar jobs
+- `app/views/jobs/index.html.erb` - Interface de gerenciamento
+- `config/sidekiq.yml` - Configuração do Sidekiq
+- `test/jobs/team_sorting_job_test.rb` - Testes dos jobs
+- `docs/sidekiq_jobs.md` - Documentação completa 

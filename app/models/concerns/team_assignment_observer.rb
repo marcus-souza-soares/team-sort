@@ -10,8 +10,9 @@ module TeamAssignmentObserver
     # Callback para atualizar estatísticas da sessão
     after_commit :update_session_statistics, on: [:create, :update, :destroy]
 
-    # Callback para notificar mudanças importantes
-    after_commit :notify_team_changes, on: [:create, :destroy]
+    # Callbacks para notificar mudanças importantes
+    after_commit :notify_player_assigned, on: [:create]
+    after_commit :notify_player_removed, on: [:destroy]
   end
 
   private
@@ -45,23 +46,12 @@ module TeamAssignmentObserver
 
   # Observer: Atualizar estatísticas da sessão
   def update_session_statistics
-    game_session.touch # Atualiza updated_at para invalidar cache se necessário
-
+    game_session.touch if persisted? # Atualiza updated_at para invalidar cache se necessário
     # Recalcula estatísticas da sessão
     total_players = game_session.team_assignments.count
     total_teams = game_session.teams.distinct.count
 
     Rails.logger.info "📊 Estatísticas atualizadas - Sessão #{game_session.date.strftime('%d/%m/%Y')}: #{total_players} jogadores em #{total_teams} times"
-  end
-
-  # Observer: Notificar mudanças importantes
-  def notify_team_changes
-    case
-    when created?
-      notify_player_assigned
-    when destroyed?
-      notify_player_removed
-    end
   end
 
   def notify_player_assigned
