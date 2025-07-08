@@ -205,4 +205,4 @@ Foi implementado um service object para sortear os times 🎲
 @app/services/team_sorter_service.rb
 
 3. Sidekiq Queue 
-Background jobs com sidekiq
+Background jobs com sidekiq para enviar notificações e fazer o clean up dos times.

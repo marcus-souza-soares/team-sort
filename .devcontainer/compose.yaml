@@ -11,6 +11,9 @@ services:
 
     # Overrides default command so things don't shut down after the process ends.
     command: sleep infinity
+    environment:
+      REDIS_URL: redis://redis:6379
+      REDIS_SIDEKIQ_DB: 1
 
     # Uncomment the next line to use a non-root user for all processes.
     # user: vscode
@@ -19,9 +22,16 @@ services:
     # (Adding the "ports" property to this file will not forward from a Codespace.)
     depends_on:
     - selenium
-
+    - redis
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redis-data:/var/lib/redis/data
   selenium:
     image: selenium/standalone-chromium
     restart: unless-stopped
+
+volumes:
+  redis-data: null
 
   
