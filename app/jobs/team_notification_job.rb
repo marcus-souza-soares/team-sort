@@ -9,7 +9,9 @@ class TeamNotificationJob < ApplicationJob
     begin
       # Agrupar jogadores por time
       teams_with_players = game_session.teams.includes(:players).map do |team|
-        players = team.players.where(game_session: game_session)
+        # Usar TeamAssignment para obter jogadores do time nesta sessão específica
+        players = team.players.joins(:team_assignments)
+                              .where(team_assignments: { game_session: game_session })
         {
           team: team,
           players: players,

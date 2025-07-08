@@ -1,8 +1,8 @@
 :concurrency: 5
 :queues:
-  - [default, 1]
-  - [notifications, 2]
-  - [maintenance, 3]
+  - default
+  - notifications
+  - maintenance
 
 :max_retries: 3
 :retry_interval: 60
@@ -10,4 +10,4 @@
 :logfile: log/sidekiq.log
 :pidfile: tmp/pids/sidekiq.pid
 
-:verbose: true 
+:verbose: true

@@ -204,4 +204,5 @@ Foi implementado observers no modelo de TeamAssignment
 Foi implementado um service object para sortear os times 🎲
 @app/services/team_sorter_service.rb
 
-3. 
+3. Sidekiq Queue 
+Background jobs com sidekiq

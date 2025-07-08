@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  require "sidekiq/web" 
+  require "sidekiq/web"
   mount Sidekiq::Web => "/sidekiq"
 
   resources :team_assignments

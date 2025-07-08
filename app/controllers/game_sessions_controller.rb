@@ -1,5 +1,5 @@
 class GameSessionsController < ApplicationController
-  before_action :set_game_session, only: %i[ show edit update destroy sort_teams manage_players add_player remove_player sort_teams_form ]
+  before_action :set_game_session, only: %i[ show edit update destroy sort_teams manage_players add_player remove_player sort_teams_form sort_teams_job send_notifications cleanup_session ]
 
   # GET /game_sessions or /game_sessions.json
   def index
@@ -123,6 +123,36 @@ class GameSessionsController < ApplicationController
     else
       redirect_to manage_players_game_session_path(@game_session), alert: "Erro ao remover jogador."
     end
+  end
+
+  # POST /game_sessions/1/sort_teams_job
+  def sort_teams_job
+    players_per_team = params[:players_per_team]&.to_i || 5
+
+    if @game_session.can_start?(players_per_team)
+      # Enfileirar job de sorteio
+      job = TeamSortingJob.perform_later(@game_session.id, players_per_team)
+
+      redirect_to @game_session, notice: "Sorteio de times iniciado! Job ID: #{job.job_id}"
+    else
+      redirect_to @game_session, alert: "Sessão não pode ser iniciada. Mínimo de #{players_per_team * 2} jogadores necessários."
+    end
+  end
+
+  # POST /game_sessions/1/send_notifications
+  def send_notifications
+    # Enfileirar job de notificação
+    job = TeamNotificationJob.perform_later(@game_session.id)
+
+    redirect_to @game_session, notice: "Notificações sendo enviadas! Job ID: #{job.job_id}"
+  end
+
+  # POST /game_sessions/1/cleanup_session
+  def cleanup_session
+    # Enfileirar job de limpeza
+    job = TeamCleanupJob.perform_later(@game_session.id)
+
+    redirect_to @game_session, notice: "Limpeza da sessão iniciada! Job ID: #{job.job_id}"
   end
 
   private

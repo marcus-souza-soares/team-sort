@@ -6,7 +6,7 @@ Sidekiq.configure_server do |config|
   config.redis = { url: ENV.fetch('REDIS_URL', 'redis://localhost:6379/0') }
 
   # Configurações de logging
-  config.logger.level = Rails.env.development? ? Logger::DEBUG : Logger::INFO
+  config.logger.level = Logger::INFO
 end
 
 Sidekiq.configure_client do |config|
