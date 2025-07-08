@@ -18,49 +18,53 @@
 
   <div id="game_sessions" class="space-y-4">
     <% if @game_sessions.any? %>
-      <% @game_sessions.each do |game_session| %>
-        <div class="bg-white shadow rounded-lg p-6 hover:shadow-md transition-shadow">
-          <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center">
-            <div class="flex-1">
-              <div class="flex items-center gap-4 mb-2">
-                <h3 class="font-bold text-xl text-gray-900">
-                  Sessão de <%= game_session.date.strftime("%d/%m/%Y") %>
-                </h3>
-                <span class="px-2 py-1 text-xs font-medium rounded-full
-                  <%= case game_session.status
-                      when 'scheduled' then 'bg-blue-100 text-blue-800'
-                      when 'in_progress' then 'bg-yellow-100 text-yellow-800'
-                      when 'completed' then 'bg-green-100 text-green-800'
-                      when 'cancelled' then 'bg-red-100 text-red-800'
-                      else 'bg-gray-100 text-gray-800'
-                      end %>">
-                  <%= game_session.status_text %>
-                </span>
-              </div>
-              
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-600">
-                <div>
-                  <span class="font-medium">Horário:</span>
-                  <%= game_session.date.strftime("%H:%M") %>
+      <% cache @game_sessions do %>
+        <% @game_sessions.each do |game_session| %>
+          <% cache game_session do %>
+            <div class="bg-white shadow rounded-lg p-6 hover:shadow-md transition-shadow">
+              <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center">
+                <div class="flex-1">
+                  <div class="flex items-center gap-4 mb-2">
+                    <h3 class="font-bold text-xl text-gray-900">
+                      Sessão de <%= game_session.date.strftime("%d/%m/%Y") %>
+                    </h3>
+                    <span class="px-2 py-1 text-xs font-medium rounded-full
+                      <%= case game_session.status
+                          when 'scheduled' then 'bg-blue-100 text-blue-800'
+                          when 'in_progress' then 'bg-yellow-100 text-yellow-800'
+                          when 'completed' then 'bg-green-100 text-green-800'
+                          when 'cancelled' then 'bg-red-100 text-red-800'
+                          else 'bg-gray-100 text-gray-800'
+                          end %>">
+                      <%= game_session.status_text %>
+                    </span>
+                  </div>
+                  
+                  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-600">
+                    <div>
+                      <span class="font-medium">Horário:</span>
+                      <%= game_session.date.strftime("%H:%M") %>
+                    </div>
+                    <div>
+                      <span class="font-medium">Total Jogadores:</span>
+                      <%= game_session.total_players %>
+                    </div>
+                    <div>
+                      <span class="font-medium">Times:</span>
+                      <%= game_session.total_teams %>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <span class="font-medium">Total Jogadores:</span>
-                  <%= game_session.total_players %>
-                </div>
-                <div>
-                  <span class="font-medium">Times:</span>
-                  <%= game_session.total_teams %>
+                
+                <div class="flex flex-col sm:flex-row gap-2 mt-4 lg:mt-0">
+                  <%= link_to "Ver Detalhes", game_session, class: "px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium text-center" %>
+                  <%= link_to "Editar", edit_game_session_path(game_session), class: "px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md font-medium text-center" %>
+                  <%= button_to "Excluir", game_session, method: :delete, class: "px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md font-medium", data: { turbo_confirm: "Tem certeza que deseja excluir esta sessão?" } %>
                 </div>
               </div>
             </div>
-            
-            <div class="flex flex-col sm:flex-row gap-2 mt-4 lg:mt-0">
-              <%= link_to "Ver Detalhes", game_session, class: "px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium text-center" %>
-              <%= link_to "Editar", edit_game_session_path(game_session), class: "px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md font-medium text-center" %>
-              <%= button_to "Excluir", game_session, method: :delete, class: "px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md font-medium", data: { turbo_confirm: "Tem certeza que deseja excluir esta sessão?" } %>
-            </div>
-          </div>
-        </div>
+          <% end %>
+        <% end %>
       <% end %>
     <% else %>
       <div class="text-center py-12">

@@ -18,47 +18,51 @@
 
   <div id="players" class="space-y-4">
     <% if @players.any? %>
-      <% @players.each do |player| %>
-        <div class="bg-white shadow rounded-lg p-6 hover:shadow-md transition-shadow">
-          <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center">
-            <div class="flex-1">
-              <div class="flex items-center gap-4 mb-2">
-                <h3 class="font-bold text-xl text-gray-900"><%= player.full_name %></h3>
-                <span class="px-2 py-1 text-xs font-medium rounded-full
-                  <%= player.status ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' %>">
-                  <%= player.status_text %>
-                </span>
-              </div>
-              
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-600">
-                <% if player.email.present? %>
-                  <div>
-                    <span class="font-medium">Email:</span>
-                    <%= player.email %>
+      <% cache @players do %>
+        <% @players.each do |player| %>
+          <% cache player do %>
+            <div class="bg-white shadow rounded-lg p-6 hover:shadow-md transition-shadow">
+              <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center">
+                <div class="flex-1">
+                  <div class="flex items-center gap-4 mb-2">
+                    <h3 class="font-bold text-xl text-gray-900"><%= player.full_name %></h3>
+                    <span class="px-2 py-1 text-xs font-medium rounded-full
+                      <%= player.status ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' %>">
+                      <%= player.status_text %>
+                    </span>
                   </div>
-                <% end %>
-                <% if player.phone.present? %>
-                  <div>
-                    <span class="font-medium">Telefone:</span>
-                    <%= player.phone %>
+                  
+                  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-600">
+                    <% if player.email.present? %>
+                      <div>
+                        <span class="font-medium">Email:</span>
+                        <%= player.email %>
+                      </div>
+                    <% end %>
+                    <% if player.phone.present? %>
+                      <div>
+                        <span class="font-medium">Telefone:</span>
+                        <%= player.phone %>
+                      </div>
+                    <% end %>
+                    <% if player.position.present? %>
+                      <div>
+                        <span class="font-medium">Posição:</span>
+                        <%= player.position %>
+                      </div>
+                    <% end %>
                   </div>
-                <% end %>
-                <% if player.position.present? %>
-                  <div>
-                    <span class="font-medium">Posição:</span>
-                    <%= player.position %>
-                  </div>
-                <% end %>
+                </div>
+                
+                <div class="flex flex-col sm:flex-row gap-2 mt-4 lg:mt-0">
+                  <%= link_to "Ver Detalhes", player, class: "px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium text-center" %>
+                  <%= link_to "Editar", edit_player_path(player), class: "px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md font-medium text-center" %>
+                  <%= button_to "Excluir", player, method: :delete, class: "px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md font-medium", data: { turbo_confirm: "Tem certeza que deseja excluir este jogador?" } %>
+                </div>
               </div>
             </div>
-            
-            <div class="flex flex-col sm:flex-row gap-2 mt-4 lg:mt-0">
-              <%= link_to "Ver Detalhes", player, class: "px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium text-center" %>
-              <%= link_to "Editar", edit_player_path(player), class: "px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md font-medium text-center" %>
-              <%= button_to "Excluir", player, method: :delete, class: "px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md font-medium", data: { turbo_confirm: "Tem certeza que deseja excluir este jogador?" } %>
-            </div>
-          </div>
-        </div>
+          <% end %>
+        <% end %>
       <% end %>
     <% else %>
       <div class="text-center py-12">

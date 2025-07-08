@@ -206,3 +206,9 @@ Foi implementado um service object para sortear os times 🎲
 
 3. Sidekiq Queue 
 Background jobs com sidekiq para enviar notificações e fazer o clean up dos times.
+
+4. Queries
+Foi adicionado o metodo includes para aumentar a perfomance do banco de dados.
+
+5. Cache
+Algumas views possuem cache, como o index em game_sessions, players e teams.
